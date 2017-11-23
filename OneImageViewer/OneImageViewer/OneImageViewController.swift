@@ -16,24 +16,47 @@ class OneImageViewController: UIViewController, UIScrollViewDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        setUpBottomView()
-        setUpImageView()
-        setUpPickAnImageButton()
-        
+
+        imageView = UIImageView(image: UIImage(named: "testPhoto"))
         scrollView = UIScrollView()
-        scrollView.contentSize = imageView.bounds.size
+        bottomView = UIView()
+        pickAnImageButton = UIButton()
+        self.view.addSubview(bottomView)
         self.view.addSubview(scrollView)
-        setUpScrollViewConstraints()
+        self.bottomView.addSubview(pickAnImageButton)
         scrollView.addSubview(imageView)
 
+        setUpBottomView()
+        setUpPickAnImageButton()
+        setUpImageView()
+
+        setUpScrollViewConstraints()
+        scrollView.contentSize = imageView.bounds.size
+
         scrollView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+    
         scrollView.delegate = self
+        scrollView.maximumZoomScale = 2.0
         
     } // viewDidLoad
 
-    func viewForZooming(in scrollView: UIScrollView) -> UIView? {
-        return imageView
-    }
+//    override func viewWillLayoutSubviews(){
+//        super.viewWillLayoutSubviews()
+//        // ToDo: make sure use scrollView.bound.size is ok????
+//        updateMinZoomScaleForSize(scrollView.bounds.size)
+//    } // viewWillLayoutSubviews
+
+//    fileprivate func updateMinZoomScaleForSize(_ size: CGSize) {
+//        let widthScale = size.width / imageView.bounds.width
+//        let heightScale = size.height / imageView.bounds.height
+//        let minScale = min(widthScale, heightScale)
+//        scrollView.minimumZoomScale = minScale
+//        scrollView.zoomScale = minScale
+//    }
+    
+//    func viewForZooming(in scrollView: UIScrollView) -> UIView? {
+//        return imageView
+//    }
 
     func setUpScrollViewConstraints() {
         
@@ -50,7 +73,6 @@ class OneImageViewController: UIViewController, UIScrollViewDelegate {
     } //setUpScrollView
     
     func setUpImageView() {
-        imageView = UIImageView(image: UIImage(named: "icon_photo"))
         
         
     } //setUpImageView
@@ -58,7 +80,7 @@ class OneImageViewController: UIViewController, UIScrollViewDelegate {
     func setUpBottomView() {
         let margins = self.view.layoutMarginsGuide
         let rect = CGRect(x: 0, y: 0, width: self.view.bounds.width, height: 77)
-        bottomView = UIView()
+        
         bottomView.frame = rect
         bottomView.backgroundColor = UIColor(
             red: 249.0/255.0,
@@ -66,7 +88,7 @@ class OneImageViewController: UIViewController, UIScrollViewDelegate {
             blue: 23.0/255.0,
             alpha: 1.0
         )
-        self.view.addSubview(bottomView)
+        
         bottomView.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
@@ -80,7 +102,7 @@ class OneImageViewController: UIViewController, UIScrollViewDelegate {
     } //setUpBottomView
     
     func setUpPickAnImageButton() {
-        pickAnImageButton = UIButton()
+        
         pickAnImageButton.frame = CGRect(x: 0, y: 0, width: 180, height: 44)
         pickAnImageButton.backgroundColor = UIColor(
             red: 43.0/255.0,
@@ -104,7 +126,7 @@ class OneImageViewController: UIViewController, UIScrollViewDelegate {
         ).cgColor
         pickAnImageButton.layer.masksToBounds = true
         
-        self.bottomView.addSubview(pickAnImageButton)
+        
         pickAnImageButton.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
