@@ -8,7 +8,7 @@
 
 import UIKit
 
-class OneImageViewController: UIViewController, UINavigationControllerDelegate, UIScrollViewDelegate, UIImagePickerControllerDelegate {
+class OneImageViewController: UIViewController,  UIScrollViewDelegate {
     var scrollView: UIScrollView!
     var imageView: UIImageView!
     var bottomView: UIView!
@@ -51,22 +51,7 @@ class OneImageViewController: UIViewController, UINavigationControllerDelegate, 
         
     } // viewDidLoad
     
-    @objc func importPhotoFromLibrary(){
-        let image = UIImagePickerController()
-        image.delegate = self
-        
-        image.sourceType = UIImagePickerControllerSourceType.photoLibrary
-        image.allowsEditing = false
-        self.present(image, animated: true, completion: nil)
-        
-    } // importPhotoFromLibrary
-
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String: Any]) {
-        if let image = info[UIImagePickerControllerOriginalImage] as? UIImage {
-            imageView.image = image
-            self.dismiss(animated: true, completion: nil)
-        } 
-    }
+    
 
     fileprivate func updateMinZoomScaleForSize(_ size: CGSize) {
         let widthScale = size.width / imageView.bounds.width
@@ -180,8 +165,25 @@ class OneImageViewController: UIViewController, UINavigationControllerDelegate, 
             right: horizontalPadding
         )
     }
-    
-
-
 } // class OneImageViewController
+
+extension OneImageViewController: UINavigationControllerDelegate, UIImagePickerControllerDelegate {
+    
+    @objc func importPhotoFromLibrary(){
+        let image = UIImagePickerController()
+        image.delegate = self
+        
+        image.sourceType = UIImagePickerControllerSourceType.photoLibrary
+        image.allowsEditing = false
+        self.present(image, animated: true, completion: nil)
+        
+    }
+    
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String: Any]) {
+        if let image = info[UIImagePickerControllerOriginalImage] as? UIImage {
+            imageView.image = image
+            self.dismiss(animated: true, completion: nil)
+        }
+    }
+}
 
