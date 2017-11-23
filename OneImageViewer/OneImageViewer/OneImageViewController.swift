@@ -8,7 +8,7 @@
 
 import UIKit
 
-class OneImageViewController: UIViewController {
+class OneImageViewController: UIViewController, UIScrollViewDelegate {
     var scrollView: UIScrollView!
     var imageView: UIImageView!
     var bottomView: UIView!
@@ -16,27 +16,45 @@ class OneImageViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        // ToDo: initial UIScrollView with frame
-        scrollView = UIScrollView()
-        imageView = UIImageView(image: UIImage(named: "icon_photo"))
-        let rect = CGRect(x: 0, y: 0, width: self.view.bounds.width, height: 77)
-        scrollView.frame = rect
-        self.view.addSubview(scrollView)
-        scrollView.addSubview(imageView)
-        
-        
-        
-        
-        
-        
-        
-//        setUpScrollView()
-//        setUpImageView()
         setUpBottomView()
+        setUpImageView()
         setUpPickAnImageButton()
+        
+        scrollView = UIScrollView()
+        scrollView.contentSize = imageView.bounds.size
+        self.view.addSubview(scrollView)
+        setUpScrollViewConstraints()
+        scrollView.addSubview(imageView)
+
+        scrollView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        scrollView.delegate = self
+        
     } // viewDidLoad
+
+    func viewForZooming(in scrollView: UIScrollView) -> UIView? {
+        return imageView
+    }
+
+    func setUpScrollViewConstraints() {
+        
+        let margins = self.view.layoutMarginsGuide
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            scrollView.topAnchor.constraint(equalTo: margins.topAnchor, constant: 0),
+            scrollView.bottomAnchor.constraint(equalTo: bottomView.topAnchor, constant: 0),
+            scrollView.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 0),
+            scrollView.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: 0),
+            scrollView.widthAnchor.constraint(equalToConstant: self.view.bounds.width)
+            ])
+    } //setUpScrollView
     
+    func setUpImageView() {
+        imageView = UIImageView(image: UIImage(named: "icon_photo"))
+        
+        
+    } //setUpImageView
+
     func setUpBottomView() {
         let margins = self.view.layoutMarginsGuide
         let rect = CGRect(x: 0, y: 0, width: self.view.bounds.width, height: 77)
@@ -60,7 +78,7 @@ class OneImageViewController: UIViewController {
         ])
         
     } //setUpBottomView
-
+    
     func setUpPickAnImageButton() {
         pickAnImageButton = UIButton()
         pickAnImageButton.frame = CGRect(x: 0, y: 0, width: 180, height: 44)
@@ -97,14 +115,10 @@ class OneImageViewController: UIViewController {
         ])
     } //setUpPickAnImageButton
 
-    func setUpScrollView() {
-    } //setUpScrollView
-
-
-    func setUpImageView() {
-    } //setUpImageView
+    
     
     
 
 
 } // class OneImageViewController
+
