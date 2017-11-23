@@ -8,7 +8,7 @@
 
 import UIKit
 
-class OneImageViewController: UIViewController, UIScrollViewDelegate {
+class OneImageViewController: UIViewController, UINavigationControllerDelegate, UIScrollViewDelegate, UIImagePickerControllerDelegate {
     var scrollView: UIScrollView!
     var imageView: UIImageView!
     var bottomView: UIView!
@@ -29,6 +29,9 @@ class OneImageViewController: UIViewController, UIScrollViewDelegate {
         setUpBackgroundView()
         setUpBottomView()
         setUpPickAnImageButton()
+        
+        pickAnImageButton.addTarget(self, action: #selector(importPhotoFromLibrary), for: .touchUpInside)
+
         let rect = CGRect(
             x: view.bounds.origin.x,
             y: view.bounds.origin.y,
@@ -47,6 +50,23 @@ class OneImageViewController: UIViewController, UIScrollViewDelegate {
         scrollView.maximumZoomScale = 2.0
         
     } // viewDidLoad
+    
+    @objc func importPhotoFromLibrary(){
+        let image = UIImagePickerController()
+        image.delegate = self
+        
+        image.sourceType = UIImagePickerControllerSourceType.photoLibrary
+        image.allowsEditing = false
+        self.present(image, animated: true, completion: nil)
+        
+    } // importPhotoFromLibrary
+
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String: Any]) {
+        if let image = info[UIImagePickerControllerOriginalImage] as? UIImage {
+            imageView.image = image
+            self.dismiss(animated: true, completion: nil)
+        } 
+    }
 
     fileprivate func updateMinZoomScaleForSize(_ size: CGSize) {
         let widthScale = size.width / imageView.bounds.width
@@ -147,19 +167,18 @@ class OneImageViewController: UIViewController, UIScrollViewDelegate {
     }
     
     fileprivate func updateConstraintsForSize() {
-        scrollView.contentInset = UIEdgeInsets.zero
-//        let imageViewSize = imageView.frame.size
-//        let scrollViewSize = scrollView.bounds.size
-//
-//        let verticalPadding = imageViewSize.height < scrollViewSize.height ?            (scrollViewSize.height - imageViewSize.height) / 2 : 0
-//        let horizontalPadding = imageViewSize.width < scrollViewSize.width ? (scrollViewSize.width - imageViewSize.width) / 2 : 0
-//
-//        scrollView.contentInset = UIEdgeInsets(
-//            top: verticalPadding,
-//            left: horizontalPadding,
-//            bottom: verticalPadding,
-//            right: horizontalPadding
-//        )
+        let imageViewSize = imageView.frame.size
+        let scrollViewSize = scrollView.bounds.size
+
+        let verticalPadding = imageViewSize.height < scrollViewSize.height ?            (scrollViewSize.height - imageViewSize.height) / 2 : 0
+        let horizontalPadding = imageViewSize.width < scrollViewSize.width ? (scrollViewSize.width - imageViewSize.width) / 2 : 0
+
+        scrollView.contentInset = UIEdgeInsets(
+            top: verticalPadding,
+            left: horizontalPadding,
+            bottom: verticalPadding,
+            right: horizontalPadding
+        )
     }
     
 
