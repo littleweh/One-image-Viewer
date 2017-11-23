@@ -23,10 +23,11 @@ class OneImageViewController: UIViewController,  UIScrollViewDelegate {
             alpha: 1.0
         )
         
-        imageView = UIImageView(image: UIImage(named: "icon_photo"))
+        imageView = UIImageView(image: UIImage(named: "testPhoto"))
         let templateImage = imageView.image?.withRenderingMode(.alwaysTemplate)
         imageView.image = templateImage
         imageView.tintColor = .white
+        imageView.contentMode = .center
         
         bottomView = UIView()
         pickAnImageButton = UIButton()
@@ -43,11 +44,14 @@ class OneImageViewController: UIViewController,  UIScrollViewDelegate {
         scrollView.addSubview(imageView)
 
         setUpScrollView()
-//        setUpImageView()
+        
+        setUpImageView()
         scrollView.contentSize = CGSize(
-            width: self.view.frame.size.width,
-            height: self.view.frame.size.height - bottomView.frame.size.height - 20
+            width: imageView.bounds.size.width,
+            height: imageView.bounds.size.height
         )
+        scrollView.alwaysBounceVertical = true
+        scrollView.alwaysBounceHorizontal = true
 
         scrollView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
     
@@ -71,16 +75,12 @@ class OneImageViewController: UIViewController,  UIScrollViewDelegate {
 
     override func viewWillLayoutSubviews(){
         super.viewWillLayoutSubviews()
-        let size = CGSize(
-            width: view.bounds.width,
-            height: view.bounds.height - 20 - bottomView.bounds.height
-        )
-//        print(size)
-        updateMinZoomScaleForSize(size)
+//        setUpImageView()
+        updateMinZoomScaleForSize(view.bounds.size)
     } // viewWillLayoutSubviews
     
     func scrollViewDidZoom(_ scrollView: UIScrollView) {
-        updateConstraintsForSize()
+//        updateConstraintsForSize()
     }
     
     fileprivate func updateConstraintsForSize() {
@@ -96,6 +96,7 @@ class OneImageViewController: UIViewController,  UIScrollViewDelegate {
             bottom: verticalPadding,
             right: horizontalPadding
         )
+        view.layoutIfNeeded()
     }
 
     func setUpScrollView() {
@@ -107,7 +108,6 @@ class OneImageViewController: UIViewController,  UIScrollViewDelegate {
             scrollView.bottomAnchor.constraint(equalTo: bottomView.topAnchor, constant: 0),
             scrollView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 0),
             scrollView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: 0),
-            scrollView.widthAnchor.constraint(equalToConstant: self.view.bounds.width)
         ])
     } //setUpScrollViewConstraints
     
@@ -118,8 +118,9 @@ class OneImageViewController: UIViewController,  UIScrollViewDelegate {
             imageView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: 0),
             imageView.leftAnchor.constraint(equalTo: scrollView.leftAnchor, constant: 0),
             imageView.rightAnchor.constraint(equalTo: scrollView.rightAnchor, constant: 0),
-            imageView.widthAnchor.constraint(equalToConstant: self.view.bounds.width)
-            ])
+            imageView.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor),
+            imageView.centerYAnchor.constraint(equalTo: scrollView.centerYAnchor)
+        ])
     }
 
     func setUpBottomView() {
